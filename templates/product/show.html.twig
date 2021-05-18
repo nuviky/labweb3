@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Продукт{% endblock %}
+
+{% block body %}
+    <a href="{{ path('product_index') }}">Вернуться к списку товаров</a>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Название</th>
+                <td>{{ product.Name }}</td>
+            </tr>
+            <tr>
+                <th>Дата добавления</th>
+                <td>{{ product.Info }}</td>
+            </tr>
+            <tr>
+                <th>Описание товара</th>
+                <td>{{ product.Info }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h1>Отзывы</h1>
+    
+    {% for feedback in feedbacks %}
+    <form method="post" action="{{ path('feedback_delete', {'id': feedback.id}) }}" onsubmit="return confirm('Вы действительно хотите удалить коментарий?');">
+        <div class="card">
+            <div class="card-header">
+                {{ feedback.Rating }}
+            </div>
+            <div class="card-body">
+                <h6 class="card-title">{{ feedback.Date|format_datetime() }}</h6>
+                <p class="card-text">{{ feedback.Text }}</p>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ feedback.id) }}">
+                    <button class="btn">Удалить коментарий</button>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+    
+    {% endfor %}
+    {% if app.user %}
+    {{ include('product/_form.html.twig') }}
+    {% endif %}
+{% endblock %}

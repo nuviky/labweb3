@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Продукты{% endblock %}
+
+{% block body %}
+    <h1>Список продуктовя</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Дата</th>
+                <th>Кол-во отзывов</th>
+                <th>Ср. оценка</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>
+                <a href="{{ path('product_show', {'id': product.id}) }}">{{ product.Name }}</a>
+                </td>
+                <td>{{ product.Info }}</td>
+                <td>{{ product.date|date("m/d/Y") }}</td>
+                {% set feedbacks = product.getFeedback()%}
+                <td>{{ feedbacks.count }}</td>
+                <td>
+                {% if feedbacks.count > 0 %}
+                    {% set rating = 0.0 %}
+                    {% for feedback in feedbacks %}
+                    {% set rating = rating + feedback.Rating %}
+                    {% endfor %}
+                    {{ rating / feedbacks.count }}
+                {% else %}
+                    Нет отзывов
+                {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Список товаров пуст</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

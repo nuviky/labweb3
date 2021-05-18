@@ -39,6 +39,7 @@ class RegistrationFormType extends AbstractType
                 'required' => true,
                 'first_options' => ['label' => 'Пароль'],
                 'second_options' => ['label' => 'Повторите пароль'],
+                'invalid_message' => 'Пароли не совпадают',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Введите пароль',
